@@ -1,26 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class CounterCp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0,
+    };
+  }
+
+  update = type => {
+    if (type === "Inc") {
+      this.setState((prevState) => ({count: prevState.count + 1}));
+    } else if (type === "Dec") {
+      this.setState(({count}) => ({count: count - 1}));
+    }
+  }
+
+  render() {
+    return (
+      this.props.render({
+        ...this.state,
+        ...this.props,
+        update: this.update,
+      })
+    )
+  }
 }
 
-export default App;
+const Couter = ({count, update}) => (
+  <div>
+    <button onClick={() => update("Inc")}>Inc</button>
+    {count}
+    <button onClick={() => update("Dec")}>Dec</button>
+  </div>
+)
+export default class App extends React.Component {
+  render() {
+    return <CounterCp render={data => <Couter {...data}/>}/>
+  }
+}
